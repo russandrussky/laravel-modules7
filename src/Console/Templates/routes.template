@@ -1,0 +1,4 @@
+<?php
+Route::group(['prefix' => 'admin', 'namespace' => '\Modules\{% MODULE %}\Http\Controllers'], function() {
+	
+});

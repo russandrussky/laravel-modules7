@@ -1,0 +1,28 @@
+<?php
+
+namespace Modules\{% MODULE %}\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class ModuleServiceProvider extends ServiceProvider {
+    protected $defer = false;
+
+    public function boot() {
+        $this->loadTranslationsFrom(realpath(__DIR__.'/../Resources/lang'), strtolower('{% MODULE %}'));
+        $this->loadViewsFrom(__DIR__.'/../Resources/views', strtolower('{% MODULE %}'));
+    }
+
+    public function register() {
+       $this->mountRoutes();
+       $this->registerConfig();
+    }
+
+    protected function mountRoutes() {
+    	require_once(__DIR__ . '/../Http/routes.php');
+    }
+
+    protected function registerConfig() {
+        $this->app['config']->set('lrx.menu', array_merge_recursive(require __DIR__.'/../Config/menu.php', $this->app['config']->get('lrx.menu', []) ));
+        $this->app['config']->set('lrx.permissions', array_merge_recursive(require __DIR__.'/../Config/permissions.php', $this->app['config']->get('lrx.permissions', []) ));
+    }
+}

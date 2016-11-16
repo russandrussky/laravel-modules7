@@ -1,0 +1,28 @@
+<?php
+return [];
+/*
+return [
+	'Администраторы' => [
+		[
+			'index' => 1,
+			'name' => 'managers-view',
+			'description' => 'Просмотр администраторов'
+		],
+		[
+			'index' => 2,
+			'name' => 'managers-create',
+			'description' => 'Добавление администраторов'
+		],
+		[
+			'index' => 3,
+			'name' => 'managers-edit',
+			'description' => 'Редактирвание администраторов'
+		],
+		[
+			'index' => 4,
+			'name' => 'managers-delete',
+			'description' => 'Удаление администраторов'
+		]
+	]
+];
+*/

@@ -60,6 +60,6 @@ class Module {
             'priority'    => $this->priority,
             'enabled'     => $this->enabled,
             'provider'    => $this->provider
-        ]);
+        ], JSON_PRETTY_PRINT);
     }
 }

@@ -22,7 +22,7 @@ class Module {
 
         if($validation->fails()) {
             $message = current($validation->messages()->toArray());
-            throw new InvalidArgumentException($message[0]);
+            throw new \InvalidArgumentException($message[0]);
         }
 
         $this->name        = $args['name'];

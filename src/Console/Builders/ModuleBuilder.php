@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Elfet\Modules\Container\Module;
 use Elfet\Modules\Console\Builders\Builder;
 
-class ModuleGenerator extends Builder {
+class ModuleBuilder extends Builder {
 	/**
      * The module name will created.
      *
@@ -47,25 +47,65 @@ class ModuleGenerator extends Builder {
     }
 
 	private function buildSkeleton() {
+		$this->console->getLaravel()->files->makeDirectory($this->config['paths']['root'] . '/' . ucfirst($this->module->name));
 
+        foreach ($this->config['paths']['structure'] as $key => $folder) {
+            $this->console->getLaravel()->files->makeDirectory($this->config['paths']['root'] . '/' . ucfirst($this->module->name) . '/' . $folder, 0777, true);
+        }
+	}
+
+	private function makeFilesFromTemplates() {
+        $this->makeServiceProvider();
+        $this->makeRoutes();
+        $this->makeConfigs();
+    }
+
+    private function makeServiceProvider() {
+        $template = $this->console->getLaravel()->files->get(__DIR__ . '/../Templates/ModuleServiceProvider.template');
+        $template = str_replace('{% MODULE %}', $this->module->name, $template);
+		$path = $this->config['paths']['root'] . '/' . ucfirst($this->module->name) . '/' . $this->config['paths']['structure']['providers'] . '/ModuleServiceProvider.php';
+        $this->console->getLaravel()->files->put($path, $template);
+    }
+
+    private function makeRoutes() {
+        $template = $this->console->getLaravel()->files->get(__DIR__ . '/../Templates/routes.template');
+        $template = str_replace('{% MODULE %}', $this->module->name, $template);
+        $this->console->getLaravel()->files->put($this->config['paths']['root'] . '/' . ucfirst($this->module->name) . '/Http/routes.php', $template);
+    }
+
+    private function makeConfigs() {
+        $template = $this->console->getLaravel()->files->get(__DIR__ . '/../Templates/config.menu.template');
+        $this->console->getLaravel()->files->put($this->config['paths']['root'] . '/' . ucfirst($this->module->name) . '/Config/menu.php', $template);
+
+        $template = $this->console->getLaravel()->files->get(__DIR__ . '/../Templates/config.permissions.template');
+        $this->console->getLaravel()->files->put($this->config['paths']['root'] . '/' . ucfirst($this->module->name) . '/Config/permissions.php', $template);
+    }
+
+	private function createModuleJson() {
+		$path = $this->config['paths']['root'] . '/' . ucfirst($this->module->name);
+
+		$this->console->getLaravel()->files->put($path . '/module.json', json_encode($this->module->toJson(), JSON_PRETTY_PRINT));
 	}
 
 	private function overrideModule() {
-		if($this->console->laravel->files->exists()) {
+		if($this->force) {
+			$path = $this->config['paths']['root'] . '/' . ucfirst($this->module->name);
 
+			if($this->console->getLaravel()->files->exists($path)) {
+				$this->console->getLaravel()->files->deleteDirectory($path);
+			}
 		}
-
-
 	}
 
 	public function build() {
-		if($force) {
-			$this->overrideModule();
-		}
-
+		$this->overrideModule();
         $this->buildSkeleton();
+		$this->makeFilesFromTemplates();
+		$this->createModuleJson();
 
-		return $this->console->info('Module "' . $this->module->getName() . '" was successfuly created.');
+		$this->console->callSilent("module:cache", []);
+
+		return $this->console->info('Module "' . ucfirst($this->module->name) . '" was successfuly created.');
     }
 
 }

@@ -2,6 +2,7 @@
 return [
     'paths' => [
         'root' => base_path('{% DIRECTORY %}'),
+        'directory' => '{% DIRECTORY %}',
         'structure' => [
             'assets' => 'Assets/js/modules',
             'config' => 'Config',

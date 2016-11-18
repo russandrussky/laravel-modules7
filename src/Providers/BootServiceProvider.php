@@ -42,11 +42,12 @@ class BootServiceProvider extends LaravelServiceProvider {
     */
     private function loadModules() {
         if(Cache::has('elfet_modules')) {
-            $modules = json_decode(Cache::get('elfet_modules'));
+            $modules = json_decode(Cache::get('elfet_modules'), true);
 
             if($modules && json_last_error() == JSON_ERROR_NONE) {
+
                 foreach ($modules as $item) {
-                    $this->app->modules->push((new Module($item)));
+                    $this->app->modules->push((new Module(json_decode($item, true))));
                 }
             }
         }

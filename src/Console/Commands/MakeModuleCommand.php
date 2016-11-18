@@ -1,5 +1,5 @@
 <?php
-namespace Elfet\HMVC\Console;
+namespace Elfet\Modules\Console\Commands;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -36,7 +36,7 @@ class MakeModuleCommand extends Command {
 
         $force = false;
 
-        if($this->laravel->hmvc->where('name', $name)->count() > 0) {
+        if($this->laravel->modules->where('name', $name)->count() > 0) {
             $force = $this->confirm(trans('elfet.modules::messages.module_allready_exists'), false);
 
             if(!$force) {
@@ -62,6 +62,6 @@ class MakeModuleCommand extends Command {
 
         $generator = new ModuleBuilder($module, $this, $force);
 
-        return $generator->generate();
+        return $generator->build();
     }
 }

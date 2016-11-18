@@ -5,12 +5,12 @@ use Illuminate\Support\Facades\Validator;
 use App;
 
 class Module {
-    protected $name;
-    protected $description;
-    protected $priority;
-    protected $provider = '';
-    protected $enabled;
-    protected $booted = false;
+    public $name;
+    public $description;
+    public $priority;
+    public $provider = '';
+    public $enabled;
+    public $booted = false;
 
     public function __construct(Array $args) {
         $validation = Validator::make($args, [
@@ -20,8 +20,8 @@ class Module {
             'enabled'     => 'required|boolean'
         ]);
 
-        if($validate->fails()) {
-            $message = current($validate->messages()->toArray());
+        if($validation->fails()) {
+            $message = current($validation->messages()->toArray());
             throw new InvalidArgumentException($message[0]);
         }
 
@@ -33,21 +33,21 @@ class Module {
     }
 
     public function boot() {
-        if($this->enabled && !$this->booted) {
+        if($this->enabled && !$this->booted && class_exists($this->provider)) {
             $this->booted = true;
             App::register($this->provider);
 		}
     }
 
     private function generateProviderNamespace() {
-        $modulesPath = config('modules.paths.root', 'Modules');
+        $modulesPath = config('modules.paths.directory', 'Modules');
         $providersPath = config('modules.paths.structure.providers', 'Providers');
 
         $path = [
             $modulesPath,
             $this->name,
             $providersPath,
-            'ModulesServiceProvider'
+            'ModuleServiceProvider'
         ];
 
         return implode('\\', $path);

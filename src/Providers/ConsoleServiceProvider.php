@@ -26,7 +26,7 @@ class ConsoleServiceProvider extends LaravelServiceProvider {
     protected $commands = [
         'Install',
         'Cache',
-        //'Make',
+        'MakeModule',
         //'Disable',
         //'Enable',
         //'Delete',

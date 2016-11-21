@@ -1,5 +1,5 @@
 <?php
-namespace Elfet\HMVC\Facades;
+namespace Elfet\Modules\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

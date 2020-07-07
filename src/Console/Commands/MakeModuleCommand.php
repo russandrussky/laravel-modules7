@@ -27,7 +27,7 @@ class MakeModuleCommand extends Command {
      *
      * @return mixed
      */
-    public function fire() {
+    public function handle() {
         $name = $this->ask(trans('elfet.modules::messages.enter_new_module_name'), null);
 
         if(!$name || !is_string($name)) {

@@ -26,7 +26,7 @@ class CacheCommand extends Command {
      *
      * @return mixed
      */
-    public function fire() {
+    public function handle() {
         $path = config('modules.paths.root');
 
         if($this->laravel->files->exists($path)) {

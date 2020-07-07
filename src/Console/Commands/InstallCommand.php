@@ -32,7 +32,7 @@ class InstallCommand extends Command {
        *
        * @return mixed
        */
-      public function fire() {
+      public function handle() {
           if(config('modules.paths.root')) {
               $reinstall = $this->confirm(trans('elfet.modules::messages.laravel_package_instaled', [
                   'directory' => str_replace(base_path() . '/', '', config('modules.paths.root'))
